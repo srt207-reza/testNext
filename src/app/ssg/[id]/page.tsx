@@ -1,7 +1,8 @@
-import { Params } from "next/dist/server/request/params";
 
-export default async function Page({ params }: { params: Params }) {
-  const id = params.id; // Get dynamic route parameter
+export type ParamsType = Promise<{ id: string }>;
+
+export default async function Page(props: { params: ParamsType }) {
+  const { id } = await props.params;
   const user = await fetchUser(id); // Fetch data dynamically (SSR)
 
   return (

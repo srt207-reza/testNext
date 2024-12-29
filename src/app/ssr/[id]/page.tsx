@@ -1,7 +1,8 @@
-import { Params } from "next/dist/server/request/params";
+export type ParamsType = Promise<{ id: string }>;
 
-export default async function Page({ params }: { params: Params }) {
-  const id = params.id; // Get dynamic route parameter
+export default async function Page(props: { params: ParamsType }) {
+  const { id } = await props.params;
+
   const user = await fetchUser(id); // Fetch data dynamically (SSR)
 
   return (
@@ -16,14 +17,17 @@ export default async function Page({ params }: { params: Params }) {
 
 async function fetchUser(id: any) {
   try {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
+      {
+        cache: "no-store",
+      }
+    );
     if (!res.ok) {
       throw new Error("Failed to fetch product");
     }
     return res.json();
   } catch (error) {
-    return error
+    return error;
   }
 }
